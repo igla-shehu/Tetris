@@ -4,7 +4,7 @@ window.addEventListener("DOMContentLoaded",function(){
 
     var createScene = function(){
         var scene = new BABYLON.Scene(engine);
-        scene.clearColor = new BABYLON.Color3.Blue();
+        scene.clearColor = new BABYLON.Color3.Black();
 
         const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0));
         var ground = BABYLON.Mesh.CreateGround("ground1",20,20,20, scene);
@@ -15,7 +15,7 @@ window.addEventListener("DOMContentLoaded",function(){
         left.rotation.z  =  -Math.PI/2;
         
         var right = BABYLON.Mesh.CreateGround("ground1",10,10,10, scene);
-        right.position = new BABYLON.Vector3(5.5,4.5,0);
+        right.position = new BABYLON.Vector3(4.5,4.5,0);
         right.rotation.z  =  Math.PI/2;
 
 
@@ -252,7 +252,6 @@ window.addEventListener("DOMContentLoaded",function(){
                     positionPiece(piece,arena,0,0);
                     renderArena(arena,boxes);
                     rotate(currentPiece,arena);
-                    shiftArenaDown(arena,boxes);
                     myVar = setInterval(moveDown, 1000,arena,piece,boxes);
                 }else{
                     console.log('Game over');
@@ -279,29 +278,30 @@ window.addEventListener("DOMContentLoaded",function(){
                     }              
                 }
                 if(tmp){
-                    score++;
                     return i;
                    }
             }
             return null;
         }
 
-        //Problem with hiding the completed row
+       
         function shiftArenaDown(arena,boxes){
             var index=checkForCompletedRow(arena);
             if(index != null){
-                console.log("hi");
-                for(var i=index;i<9;i++){
+
+                for(var i=index;i<10;i++){
                     for(var j=0;j<10;j++){
                         
                         arena[i][j]=arena[i-1][j];
-                        var str1=(i-1).toString();
+                        var str1=i.toString();
                         var str2=j.toString();
                         var name = str1.concat(str2);
                         if(scene.getMeshByName(name))
-                            boxes[i-1][j].setEnabled(false);
-                    }
+                            boxes[i][j].setEnabled(false);
+                     }
                 }
+                arena[0].fill(0);
+                score++;
                 console.log(arena);
                 renderArena(arena,boxes);
             }
@@ -434,13 +434,12 @@ window.addEventListener("DOMContentLoaded",function(){
             renderArena(arena,boxes);
             rotate(currentPiece,arena);
             moveHorizontally(piece,arena,boxes);
-            shiftArenaDown(arena,boxes);
 
             scene.registerBeforeRender(function(){
                 
            });
         }else{
-            console.log("game over");
+            console.log("Game Over");
         }
         return scene;
     }
